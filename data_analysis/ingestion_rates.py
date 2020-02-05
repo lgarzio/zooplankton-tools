@@ -3,7 +3,7 @@
 Created on Feb 5 2020 by Lori Garzio
 @brief Calculate zooplankton ingestion rates using experimental data
 volume_ml: experimental bottle volume in milliliters
-N: number of individual zooplankton in experimental bottles
+n: number of individual zooplankton in experimental bottles
 f: file containing chl-a data at initial and final time points
 f_hours: file containing the experimental time elapsed for each treatment
 sname: name assignment for the output file
