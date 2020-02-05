@@ -15,7 +15,7 @@ import os
 pd.set_option('display.width', 320, "display.max_columns", 10)  # for display in pycharm console
 
 volume_ml = 800  # experimental bottle volume in mls
-N = 48  # number of individual zooplankton in experimental bottles
+n = 48  # number of individual zooplankton in experimental bottles
 f = '/Users/lgarzio/Documents/rucool/Saba/microplastics/NOAA2018/data/DEBay_MP_expt1_chla1.xlsx'
 f_hours = '/Users/lgarzio/Documents/rucool/Saba/microplastics/NOAA2018/data/DEBay_MP_expt1.csv'
 sname = 'DEBay_MP_expt1_ingest_rates'
@@ -86,13 +86,13 @@ for cruise in cruises:
 
             neg_g_prime = np.log(row['Chl (ug/l)'] / c_avg_t0) / tmt_time
             g = -neg_g_prime + k
-            F = volume_ml * g / N  # clearance rate, mls/individual/hour
-            C = ((c_avg_t0 * ((np.exp(neg_g_prime * tmt_time)) - 1)) / (neg_g_prime * tmt_time)) / 1000  # ug/ml
-            ingest_rate_hour = F * C  # ug Chl/ind/hour
+            clearance_rate = volume_ml * g / n  # clearance rate, mls/individual/hour
+            c = ((c_avg_t0 * ((np.exp(neg_g_prime * tmt_time)) - 1)) / (neg_g_prime * tmt_time)) / 1000  # ug/ml
+            ingest_rate_hour = clearance_rate * c  # ug Chl/ind/hour
             ingest_rate_day = ingest_rate_hour * 24  # ug Chl/ind/day
 
             summary.append([cruise, row[sta_header], '_'.join((sta, row['Bottle'])), c_avg_t0, row['Chl (ug/l)'],
-                            tmt_time, F, ingest_rate_hour, ingest_rate_day])
+                            tmt_time, clearance_rate, ingest_rate_hour, ingest_rate_day])
 
 
 summary_df = pd.DataFrame(summary, columns=sheaders)
