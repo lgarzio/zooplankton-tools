@@ -2,6 +2,7 @@
 """
 Created on Jan 30 2020 by Lori Garzio
 @brief Calculate experiment time in hours and add to the input csv file as a column
+csv_file: file containing experiment start and end times
 """
 
 import datetime as dt
