@@ -10,9 +10,10 @@ f_hours: file containing the experimental time elapsed for each treatment
 import numpy as np
 import pandas as pd
 import os
+import matplotlib.pyplot as plt
 pd.set_option('display.width', 320, "display.max_columns", 10)  # for display in pycharm console
 
-expt = 'expt2'  # expt1 or expt2
+expt = 'expt1'  # expt1 or expt2
 f = ''.join(('/Users/lgarzio/Documents/rucool/Saba/microplastics/NOAA2018/data/DEBay_MP_', expt, '_chla_forpython.xlsx'))
 f_hours = ''.join(('/Users/lgarzio/Documents/rucool/Saba/microplastics/NOAA2018/data/DEBay_MP_', expt, '.csv'))
 sname = '_'.join(('DEBay_MP', expt, 'ingest_rates'))
@@ -98,15 +99,46 @@ summary.append([])  # add extra blank row
 summary.append(['cruise', 'treatment', 'ingestion_rate_avg (ug Chl/ind/day)', 'ingestion_rate_stdev (ug Chl/ind/day)'])
 
 # calculate averages and stdev for each treatment
+plotting = dict()
 for cruise in cruises:
     sdfc = summary_df.loc[summary_df['cruise'] == cruise]
+    try:
+        plotting[cruise]
+    except KeyError:
+        plotting[cruise] = dict(labels=[], ingestion_rates=[], stdev=[])
     for sta in stations:
         sdfi = sdfc.loc[sdfc['treatment'] == sta]
         ir = np.array(sdfi['ingestion_rate (ug Chl/ind/day)'])
+        ir = ir[~np.isnan(ir)]
         ir[ir < 0] = 0  # set negative ingestion rates to zero
         mn = np.nanmean(ir)
         stdev = np.nanstd(ir, ddof=1)
         summary.append([cruise, sta, mn, stdev])
+        if sta == 'inside_front':
+            plotting[cruise]['labels'].append('Inside Front')
+        elif sta == 'outside_front':
+            plotting[cruise]['labels'].append('Outside Front')
+        else:
+            plotting[cruise]['labels'].append(sta)
+        plotting[cruise]['ingestion_rates'].append(mn)
+        plotting[cruise]['stdev'].append(stdev)
+
+fig, ax = plt.subplots()
+colors = ['firebrick', 'mediumseagreen', 'purple']
+cnt = 0
+for k, v in plotting.items():
+    ax.clear()
+    ax.bar(v['labels'], v['ingestion_rates'], color=colors[cnt], label=k, yerr=v['stdev'], capsize=8)
+    cnt = cnt + 1
+
+plt.legend(loc='best')
+plt.xlabel('Treatment')
+plt.ylabel('Ingestion Rates (ug Chl/ind/day)')
+
+plt_fname = ''.join(('ingest_rates_', expt, '.png'))
+plt_save = os.path.join(os.path.dirname(f), 'figures', plt_fname)
+plt.savefig(str(plt_save), dpi=150)
+plt.close
 
 summary_df = pd.DataFrame(summary, columns=sheaders)
 summary_df.to_csv('{}/{}.csv'.format(os.path.dirname(f), sname), index=False)
