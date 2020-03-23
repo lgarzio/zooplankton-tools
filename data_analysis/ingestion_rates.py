@@ -11,6 +11,8 @@ import numpy as np
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
+from matplotlib.offsetbox import AnchoredText
+from scipy import stats
 pd.set_option('display.width', 320, "display.max_columns", 10)  # for display in pycharm console
 
 expt = 'expt1'  # expt1 or expt2
@@ -99,41 +101,79 @@ summary.append([])  # add extra blank row
 summary.append(['cruise', 'treatment', 'ingestion_rate_avg (ug Chl/ind/day)', 'ingestion_rate_stdev (ug Chl/ind/day)'])
 
 # calculate averages and stdev for each treatment
-plotting = dict()
+plotting_df = pd.DataFrame()
+stats_dict = dict()
 for cruise in cruises:
+    plotting_dict = dict(cruise=[], labels=[], ingestion_rates=[], stdev=[])
     sdfc = summary_df.loc[summary_df['cruise'] == cruise]
     try:
-        plotting[cruise]
+        stats_dict[cruise]
     except KeyError:
-        plotting[cruise] = dict(labels=[], ingestion_rates=[], stdev=[])
+        stats_dict[cruise] = dict()
     for sta in stations:
         sdfi = sdfc.loc[sdfc['treatment'] == sta]
         ir = np.array(sdfi['ingestion_rate (ug Chl/ind/day)'])
         ir = ir[~np.isnan(ir)]
         ir[ir < 0] = 0  # set negative ingestion rates to zero
+        stats_dict[cruise][sta] = ir
         mn = np.nanmean(ir)
         stdev = np.nanstd(ir, ddof=1)
         summary.append([cruise, sta, mn, stdev])
+        plotting_dict['cruise'].append(cruise)
         if sta == 'inside_front':
-            plotting[cruise]['labels'].append('Inside Front')
+            plotting_dict['labels'].append('Inside Front')
         elif sta == 'outside_front':
-            plotting[cruise]['labels'].append('Outside Front')
+            plotting_dict['labels'].append('Outside Front')
+        elif sta == 'algae':
+            plotting_dict['labels'].append('Algae Only')
+        elif sta == 'algae_plastic':
+            plotting_dict['labels'].append('Algae + Plastic')
         else:
-            plotting[cruise]['labels'].append(sta)
-        plotting[cruise]['ingestion_rates'].append(mn)
-        plotting[cruise]['stdev'].append(stdev)
+            plotting_dict['labels'].append(sta)
+        plotting_dict['ingestion_rates'].append(mn)
+        plotting_dict['stdev'].append(stdev)
+    df = pd.DataFrame(plotting_dict)
+    if len(plotting_df) < 1:
+        plotting_df = df
+    else:
+        plotting_df = plotting_df.append(df, ignore_index=True)
 
 fig, ax = plt.subplots()
-colors = ['firebrick', 'mediumseagreen', 'purple']
-cnt = 0
-for k, v in plotting.items():
-    ax.clear()
-    ax.bar(v['labels'], v['ingestion_rates'], color=colors[cnt], label=k, yerr=v['stdev'], capsize=8)
-    cnt = cnt + 1
+if expt == 'expt1':
+    c = 'steelblue'
+else:
+    c = 'seagreen'
+ax.bar(plotting_df['labels'], plotting_df['ingestion_rates'], color=c, label='Fall2019', yerr=plotting_df['stdev'], capsize=8)
 
-plt.legend(loc='best')
-plt.xlabel('Treatment')
-plt.ylabel('Ingestion Rates (ug Chl/ind/day)')
+#### for more than 1 cruise
+# colors = ['firebrick', 'mediumseagreen', 'purple']
+# width = 0.25
+# fall = plotting_df[plotting_df['cruise'] == 'Fall2019']
+# spring = plotting_df[plotting_df['cruise'] == 'Spring2020']
+#
+# ind = np.arange(len(fall))
+#
+# rects1 = ax.bar(ind, np.array(fall['ingestion_rates']), color='firebrick', width=width, alpha=0.5,
+#                 label='Fall2019', yerr=fall['stdev'], capsize=8)
+# rects2 = ax.bar(ind + width, np.array(spring['ingestion_rates']), color='blue', width=width, alpha=0.5,
+#                 label='Spring2020', yerr=spring['stdev'], capsize=8)
+# ax.set_xticks(ind + width/2)
+# ax.set_xticklabels(fall['labels'])
+
+#ax.legend(loc='best')
+ax.set_xlabel('Treatment')
+ax.set_ylabel('Ingestion Rates (ug Chl/ind/day)')
+plt.title('Fall 2019')
+
+# calculate Student's t-test
+try:
+    t2, p2 = stats.ttest_ind(stats_dict['Fall2019']['inside_front'], stats_dict['Fall2019']['outside_front'])
+    atext = AnchoredText('t = {}\np = {}'.format(abs(round(t2, 2)), round(p2, 3)), loc=2, frameon=False, pad=1.5)
+except KeyError:
+    t2, p2 = stats.ttest_ind(stats_dict['Fall2019']['algae'], stats_dict['Fall2019']['algae_plastic'])
+    atext = AnchoredText('t = {}\np = {}'.format(abs(round(t2, 2)), round(p2, 4)), loc=1, frameon=False, pad=1.5)
+
+ax.add_artist(atext)
 
 plt_fname = ''.join(('ingest_rates_', expt, '.png'))
 plt_save = os.path.join(os.path.dirname(f), 'figures', plt_fname)
