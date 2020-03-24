@@ -162,7 +162,8 @@ ax.bar(plotting_df['labels'], plotting_df['ingestion_rates'], color=c, label='Fa
 
 #ax.legend(loc='best')
 ax.set_xlabel('Treatment')
-ax.set_ylabel('Ingestion Rates (ug Chl/ind/day)')
+ylab = 'Ingestion Rates ({}g Chl'.format(chr(956))
+ax.set_ylabel(' '.join((ylab, r'$\rm ind^{-1} day^{-1}$)')))  # \rm removes the italics
 plt.title('Fall 2019')
 
 # calculate Student's t-test
