@@ -33,9 +33,9 @@ for cruise in cruises:
         elif sta == 'outside_front':
             labs.append('Outside Front')
         elif sta == 'algae':
-            labs.append('Algae Only')
+            labs.append('Algal Culture')
         elif sta == 'algae_plastic':
-            labs.append('Algae + Plastic')
+            labs.append('Algal Culture + Plastic')
         else:
             labs.append(sta)
         dfi = dfc.loc[df['station'] == sta]

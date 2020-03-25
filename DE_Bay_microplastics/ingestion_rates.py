@@ -15,7 +15,7 @@ from matplotlib.offsetbox import AnchoredText
 from scipy import stats
 pd.set_option('display.width', 320, "display.max_columns", 10)  # for display in pycharm console
 
-expt = 'expt1'  # expt1 or expt2
+expt = 'expt2'  # expt1 or expt2
 f = ''.join(('/Users/lgarzio/Documents/rucool/Saba/microplastics/NOAA2018/data/DEBay_MP_', expt, '_chla_forpython.xlsx'))
 f_hours = ''.join(('/Users/lgarzio/Documents/rucool/Saba/microplastics/NOAA2018/data/DEBay_MP_', expt, '.csv'))
 sname = '_'.join(('DEBay_MP', expt, 'ingest_rates'))
@@ -125,9 +125,9 @@ for cruise in cruises:
         elif sta == 'outside_front':
             plotting_dict['labels'].append('Outside Front')
         elif sta == 'algae':
-            plotting_dict['labels'].append('Algae Only')
+            plotting_dict['labels'].append('Algal Culture')
         elif sta == 'algae_plastic':
-            plotting_dict['labels'].append('Algae + Plastic')
+            plotting_dict['labels'].append('Algal Culture + Plastic')
         else:
             plotting_dict['labels'].append(sta)
         plotting_dict['ingestion_rates'].append(mn)
