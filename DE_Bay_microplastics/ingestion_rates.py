@@ -25,8 +25,8 @@ sheaders = ['cruise', 'treatment', 'full_treatment', 'chl_t0', 'chl_tf', 'time_h
 
 summary = []
 
-df = pd.read_excel(f, sheetname='chla')
-hours_df = pd.read_excel(f, sheetname='expt_data')
+df = pd.read_excel(f, sheet_name='chla')
+hours_df = pd.read_excel(f, sheet_name='expt_data')
 df['btl_tp'] = df['Bottle'] + '_' + df['Time Point']
 cruises = np.unique(df['Cruise']).tolist()
 for cruise in cruises:
@@ -37,6 +37,8 @@ for cruise in cruises:
     except KeyError:
         stations = np.unique(dfc['Treatment']).tolist()
         sta_header = 'Treatment'
+    if stations == ['inside_front', 'outside_front']:
+        stations = ['outside_front', 'inside_front']
     for sta in stations:
         dfi = dfc.loc[df[sta_header] == sta]
 
@@ -167,14 +169,14 @@ plt.title('Fall 2019')
 # calculate Student's t-test
 try:
     t2, p2 = stats.ttest_ind(stats_dict['Fall2019']['inside_front'], stats_dict['Fall2019']['outside_front'])
-    atext = AnchoredText('t = {}\np = {}'.format(abs(round(t2, 2)), round(p2, 3)), loc=2, frameon=False, pad=1.5)
+    atext = AnchoredText('t = {}\np = {}'.format(abs(round(t2, 2)), round(p2, 3)), loc=1, frameon=False, pad=1.5)
 except KeyError:
     t2, p2 = stats.ttest_ind(stats_dict['Fall2019']['algae'], stats_dict['Fall2019']['algae_plastic'])
     atext = AnchoredText('t = {}\np = {}'.format(abs(round(t2, 2)), round(p2, 4)), loc=1, frameon=False, pad=1.5)
 
 ax.add_artist(atext)
 
-plt_fname = ''.join(('chla_ingest_rates_', expt, '.png'))
+plt_fname = ''.join(('Chla_ingest_rates_', expt, '.png'))
 plt_save = os.path.join(os.path.dirname(f), 'figures', plt_fname)
 plt.savefig(str(plt_save), dpi=150)
 plt.close
