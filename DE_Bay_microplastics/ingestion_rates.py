@@ -3,8 +3,7 @@
 Created on Feb 5 2020 by Lori Garzio
 @brief Calculate zooplankton ingestion rates using experimental data
 expt: experiment to analyze (options: expt1, expt2)
-f: file containing chl-a data at initial and final time points
-f_hours: file containing the experimental time elapsed for each treatment
+f: file containing experimental data; chl-a data at initial and final time points
 """
 
 import numpy as np
@@ -15,10 +14,9 @@ from matplotlib.offsetbox import AnchoredText
 from scipy import stats
 pd.set_option('display.width', 320, "display.max_columns", 10)  # for display in pycharm console
 
-expt = 'expt2'  # expt1 or expt2
-f = ''.join(('/Users/lgarzio/Documents/rucool/Saba/microplastics/NOAA2018/data/DEBay_MP_', expt, '_chla_forpython.xlsx'))
-f_hours = ''.join(('/Users/lgarzio/Documents/rucool/Saba/microplastics/NOAA2018/data/DEBay_MP_', expt, '.csv'))
-sname = '_'.join(('DEBay_MP', expt, 'ingest_rates'))
+expt = 'expt1'  # expt1 or expt2
+f = ''.join(('/Users/lgarzio/Documents/rucool/Saba/microplastics/NOAA2018/data/DEBay_MP_', expt, '.xlsx'))
+sname = '_'.join(('DEBay_MP', expt, 'chla_ingest_rates_summary'))
 
 
 # headers for final output
@@ -27,8 +25,8 @@ sheaders = ['cruise', 'treatment', 'full_treatment', 'chl_t0', 'chl_tf', 'time_h
 
 summary = []
 
-df = pd.read_excel(f)
-hours_df = pd.read_csv(f_hours)
+df = pd.read_excel(f, sheetname='chla')
+hours_df = pd.read_excel(f, sheetname='expt_data')
 df['btl_tp'] = df['Bottle'] + '_' + df['Time Point']
 cruises = np.unique(df['Cruise']).tolist()
 for cruise in cruises:
@@ -176,7 +174,7 @@ except KeyError:
 
 ax.add_artist(atext)
 
-plt_fname = ''.join(('ingest_rates_', expt, '.png'))
+plt_fname = ''.join(('chla_ingest_rates_', expt, '.png'))
 plt_save = os.path.join(os.path.dirname(f), 'figures', plt_fname)
 plt.savefig(str(plt_save), dpi=150)
 plt.close

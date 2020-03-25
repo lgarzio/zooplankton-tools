@@ -5,7 +5,7 @@ Created on Mar 24 2020 by Lori Garzio
 quartiles, with a line at the median and a diamond symbol at the mean. Whiskers extend from the box to show the range
 of the data.
 expt: experiment to analyze (options: expt1, expt2)
-f: file containing fecal pellet sinking rates
+f: file containing experimental data; fecal pellet sinking rates
 """
 
 import numpy as np
@@ -17,9 +17,9 @@ from scipy import stats
 pd.set_option('display.width', 320, "display.max_columns", 10)  # for display in pycharm console
 
 expt = 'expt2'  # expt1 or expt2
-f = ''.join(('/Users/lgarzio/Documents/rucool/Saba/microplastics/NOAA2018/data/DEBay_MP_', expt, '_FP.xlsx'))
+f = ''.join(('/Users/lgarzio/Documents/rucool/Saba/microplastics/NOAA2018/data/DEBay_MP_', expt, '.xlsx'))
 
-df = pd.read_excel(f)
+df = pd.read_excel(f, sheet_name='FP')
 
 cruises = np.unique(df['cruise']).tolist()
 bplot = []
@@ -69,7 +69,7 @@ for cruise in cruises:
 
     # calculate Student's t-test
     t2, p2 = stats.ttest_ind(bplot[0], bplot[1])
-    atext = AnchoredText('t = {}\np = {}'.format(abs(round(t2, 2)), round(p2, 4)), loc=1, frameon=False, pad=1.5)
+    atext = AnchoredText('t = {}\np = {}'.format(abs(round(t2, 2)), '{:.7f}'.format(p2)), loc=1, frameon=False, pad=1.5)
     ax.add_artist(atext)
 
     plt_fname = ''.join(('FP_sinking_rates_', expt, '.png'))
