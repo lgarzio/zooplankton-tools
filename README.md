@@ -29,6 +29,10 @@ Install the toolbox to the conda environment from the root directory of the data
 
 The toolbox should now be installed to your conda environment.
 
+You will also need to install the [broxenaxes package](https://github.com/bendichter/brokenaxes) in the zooplankton-tools environment:
+
+`pip install brokenaxes==0.4.2`
+
 
 ## Folders
-- DE Bay microplastics: scripts to analyze and plot zooplankton data for the Delaware Bay microplastics project
+- [DE Bay microplastics](https://github.com/lgarzio/zooplankton-tools/tree/master/DE_Bay_microplastics): scripts to analyze and plot zooplankton data for the Delaware Bay microplastics project
