@@ -90,7 +90,7 @@ plt.close
 
 # need to break the y-axis for this figure
 fig = plt.figure()
-bax = brokenaxes(ylims=((0, 400), (1000, 1100)), hspace=.1)
+bax = brokenaxes(ylims=((0, 1500), (4000, 4500)), hspace=.1)
 
 bax.bar(r1, np.array(outfr['abundance_count_per_m3']), color='steelblue', edgecolor='white', width=width, alpha=0.8,
         label='Outside Front')

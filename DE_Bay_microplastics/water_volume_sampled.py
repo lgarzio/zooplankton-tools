@@ -11,7 +11,7 @@ import pandas as pd
 pd.set_option('display.width', 320, "display.max_columns", 10)  # for display in pycharm console
 
 rotor_constant = 26873  # rotor constant specific to the flowmeter
-r = 0.5  # radius of net opening in meters
+r = 0.25  # radius of net opening in meters (half meter ring net)
 csv_file = '/Users/lgarzio/Documents/rucool/Saba/microplastics/NOAA2018/data/DEBay_MP_fieldsampling.csv'
 
 
