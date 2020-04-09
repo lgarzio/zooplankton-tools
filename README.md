@@ -36,3 +36,5 @@ You will also need to install the [broxenaxes package](https://github.com/bendic
 
 ## Folders
 - [DE Bay microplastics](https://github.com/lgarzio/zooplankton-tools/tree/master/DE_Bay_microplastics): scripts to analyze and plot zooplankton data for the Delaware Bay microplastics project
+
+- [Raritan Bay 2019](https://github.com/lgarzio/zooplankton-tools/tree/master/RaritanBay2019): figures for the NOAA Raritan Bay Sea Grant project
