@@ -23,7 +23,7 @@ Once the environment is done building, activate the environment:
 
 `conda activate zooplankton-tools`
 
-Install the toolbox to the conda environment from the root directory of the data-review-tools toolbox:
+Install the toolbox to the conda environment from the root directory of the zooplankton-tools toolbox:
 
 `pip install .`
 
@@ -38,3 +38,5 @@ You will also need to install the [broxenaxes package](https://github.com/bendic
 - [DE Bay microplastics](https://github.com/lgarzio/zooplankton-tools/tree/master/DE_Bay_microplastics): scripts to analyze and plot zooplankton data for the Delaware Bay microplastics project
 
 - [Raritan Bay 2019](https://github.com/lgarzio/zooplankton-tools/tree/master/RaritanBay2019): figures for the NOAA Raritan Bay Sea Grant project
+
+- [Ross Sea 2018](https://github.com/lgarzio/zooplankton-tools/tree/master/Ross_Sea_2018): figures for Ross Sea zooplankton project
