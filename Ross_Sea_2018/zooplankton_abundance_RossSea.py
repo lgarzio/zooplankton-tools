@@ -73,9 +73,9 @@ def main(f):
 
     time_pds = [x for x in np.unique(df['Period']) if 'no_period' not in x]
 
-    species = ['E. crystallorophias adult', 'E. crystallorophias small juveniles', 'T. macrura', 'Amphipods', 'Pteropods',
-               'P. antarctica adult/juvenile', 'P. antarctica larvae']
-    cols = ['red', 'firebrick', 'darkorange', 'darkgreen', 'steelblue', 'indigo', 'gray']
+    species = ['E. crystallorophias adult', 'E. crystallorophias small juveniles', 'T. macrura', 'Copepods',
+               'Amphipods', 'Pteropods', 'P. antarctica adult/juvenile', 'P. antarctica larvae']
+    cols = ['red', 'firebrick', 'darkorange', 'xkcd:maize', 'darkgreen', 'steelblue', 'indigo', 'gray']
 
     for tp in time_pds:
         df_tp = df[df['Period'] == tp]
