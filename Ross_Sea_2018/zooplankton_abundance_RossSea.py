@@ -44,6 +44,7 @@ def stacked_bar_chart(dataframe, group_list, column_name, sname, fpath, colors=N
     ax.set_xticks(r)
     ax.set_xticklabels(sdf['Tow'].tolist())
     ax.set_ylabel(r'Abundance (ind $\rm m^{-3}$)')  # \rm removes the italics
+    plt.ylim([0, 18])
     #plt.title(plot_title)
     #plt.legend(fontsize=8)
     if len(r) == 2:
@@ -55,7 +56,9 @@ def stacked_bar_chart(dataframe, group_list, column_name, sname, fpath, colors=N
     else:
         plt.subplots_adjust(top=0.9, right=0.7)
         legend_x = np.max(ax.get_xlim()) * .24
-    plt.legend(loc=(legend_x, 0.4), fontsize=8, frameon=False)
+
+    handles, labels = ax.get_legend_handles_labels()
+    ax.legend(handles[::-1], labels[::-1], loc=(legend_x, 0.4), fontsize=8, frameon=False)
     plt.tight_layout()
 
     plt_save = os.path.join(fpath, 'zooplankton_figs', sname)
@@ -94,5 +97,5 @@ def main(f):
 
 
 if __name__ == '__main__':
-    fname = '/Users/lgarzio/Documents/rucool/Saba/Ross_Sea/Ross_Sea2018/zooplankton_abundance_subset.xlsx'
+    fname = '/Users/lgarzio/Documents/rucool/Saba/Ross_Sea/Ross_Sea2018/zooplankton_abundance_subset_CORRECTED.xlsx'
     main(fname)
