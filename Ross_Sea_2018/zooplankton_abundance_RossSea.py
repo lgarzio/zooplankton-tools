@@ -9,6 +9,9 @@ import numpy as np
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
+plt.rcParams['font.family'] = 'Times'
+plt.rcParams['mathtext.fontset'] = 'stix'
+plt.rcParams.update({'font.size': 15})
 pd.set_option('display.width', 320, "display.max_columns", 15)  # for display in pycharm console
 
 
@@ -58,7 +61,7 @@ def stacked_bar_chart(dataframe, group_list, column_name, sname, fpath, colors=N
         legend_x = np.max(ax.get_xlim()) * .24
 
     handles, labels = ax.get_legend_handles_labels()
-    ax.legend(handles[::-1], labels[::-1], loc=(legend_x, 0.4), fontsize=8, frameon=False)
+    ax.legend(handles[::-1], labels[::-1], loc=(legend_x, 0.35), fontsize=10, frameon=False)
     plt.tight_layout()
 
     plt_save = os.path.join(fpath, 'zooplankton_figs', sname)
