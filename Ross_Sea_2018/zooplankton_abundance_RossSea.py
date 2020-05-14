@@ -43,8 +43,8 @@ def stacked_bar_chart(dataframe, group_list, column_name, sname, fpath, colors=N
 
     ax.set_xticks(r)
     ax.set_xticklabels(sdf['Tow'].tolist())
-    ax.set_ylabel(r'Abundance (ind $\rm m^{-3}$)')  # \rm removes the italics
-    plt.ylim([0, 18])
+    ax.set_ylabel(r'Abundance (ind $\rm m^{-2}$)')  # \rm removes the italics
+    plt.ylim([0, 1950])
     #plt.title(plot_title)
     #plt.legend(fontsize=8)
     if len(r) == 2:
@@ -76,7 +76,7 @@ def main(f):
 
     time_pds = [x for x in np.unique(df['Period']) if 'no_period' not in x]
 
-    species = ['E. crystallorophias adult', 'E. crystallorophias small juveniles', 'T. macrura', 'Copepods',
+    species = ['E. crystallorophias adult', 'E. crystallorophias juveniles', 'T. macrura', 'Copepods',
                'Amphipods', 'Pteropods', 'P. antarctica adult/juvenile', 'P. antarctica larvae']
     cols = ['red', 'firebrick', 'darkorange', 'xkcd:maize', 'darkgreen', 'steelblue', 'indigo', 'gray']
 
@@ -97,5 +97,5 @@ def main(f):
 
 
 if __name__ == '__main__':
-    fname = '/Users/lgarzio/Documents/rucool/Saba/Ross_Sea/Ross_Sea2018/zooplankton_abundance_subset_CORRECTED.xlsx'
+    fname = '/Users/lgarzio/Documents/rucool/Saba/Ross_Sea/Ross_Sea2018/zooplankton_abundance_subset_CORRECTED_ind_m2.xlsx'
     main(fname)

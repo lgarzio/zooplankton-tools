@@ -9,24 +9,19 @@ import numpy as np
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
+plt.rcParams['font.family'] = 'Times'
+plt.rcParams['mathtext.fontset'] = 'stix'
+plt.rcParams.update({'font.size': 16})
 pd.set_option('display.width', 320, "display.max_columns", 15)  # for display in pycharm console
 
 
 def stacked_bar_chart(dataframe, group_list, column_name, sname, fpath, colors=None):
     fig, ax = plt.subplots()
-    if len(np.unique(dataframe['Tow'])) > 3:
-        bar_width = 0.6
-    else:
-        bar_width = 0.5
+    bar_width = 0.8
 
     for ind in range(len(group_list)):
         sdf = dataframe[dataframe[column_name] == group_list[ind]]
-        try:
-            bar_data = np.array(sdf['abundance_count_per_m3'])
-            ylab = r'Abundance (ind $\rm m^{-3}$)'  # \rm removes the italics
-        except KeyError:
-            bar_data = np.array(sdf['percent_abundance'])
-            ylab = 'Percent Abundance (%)'
+        bar_data = np.array(sdf['percent_abundance'])
         alpha = .8
 
         if ind == 0:
@@ -48,14 +43,14 @@ def stacked_bar_chart(dataframe, group_list, column_name, sname, fpath, colors=N
 
     ax.set_xticks(r)
     ax.set_xticklabels(sdf['Tow'].tolist())
-    ax.set_ylabel(ylab)
+    ax.set_ylabel('Percent Abundance (%)')
 
     # adjust plot limits
     plt.subplots_adjust(top=0.9, right=0.6)
     legend_x = np.max(ax.get_xlim()) * .3
 
     handles, labels = ax.get_legend_handles_labels()
-    ax.legend(handles[::-1], labels[::-1], loc=(legend_x, 0.4), fontsize=8, frameon=False)  # reverse legend display
+    ax.legend(handles[::-1], labels[::-1], loc=(legend_x, 0.35), fontsize=10, frameon=False)  # reverse legend display
     plt.tight_layout()
 
     plt_save = os.path.join(fpath, 'figs', sname)
@@ -66,22 +61,29 @@ def stacked_bar_chart(dataframe, group_list, column_name, sname, fpath, colors=N
 def main(f):
     # plots by time period
     spath = os.path.split(os.path.dirname(f))[0]
-    sheets = ['abundance', 'percent_abundance']
+    sheets = ['percent_abundance', 'abundance_ind_m2']
     for sh in sheets:
         df = pd.read_excel(f, sheet_name=sh)
-        if sh == 'abundance':
-            colname = 'abundance_count_per_m3'
+        if sh == 'abundance_ind_m2':
+            fig, ax = plt.subplots()
+            ax.bar(df['Tow'], df['Total'], color='k')
+            ax.set_ylabel(r'Total Zooplankton Abundance (ind $\rm m^{-2}$)')  # \rm removes the italics'
+
+            plt_save = os.path.join(spath, 'figs', 'zoop_abundance_total.png')
+            plt.savefig(str(plt_save), dpi=150)
+            plt.close
+
         elif sh == 'percent_abundance':
             colname = 'percent_abundance'
-        df = df.melt(id_vars='Tow', var_name='Species', value_name=colname)
+            df = df.melt(id_vars='Tow', var_name='Species', value_name=colname)
 
-        species = ['E. crystallorophias adult', 'T. macrura', 'Amphipods', 'Pteropods', 'P. antarctica adult/juvenile',
-                   'P. antarctica larvae']
-        cols = ['firebrick', 'darkorange', 'darkgreen', 'steelblue', 'indigo', 'gray']
+            species = ['E. crystallorophias adult', 'T. macrura', 'Amphipods', 'Pteropods', 'P. antarctica adult/juvenile',
+                       'P. antarctica larvae', 'Other rare']
+            cols = ['forestgreen', 'firebrick', 'cornflowerblue', 'orange', 'blue', 'xkcd:warm purple', 'xkcd:sun yellow']
 
-        stacked_bar_chart(df, species, 'Species', 'zoop_{}.png'.format(sh), spath, cols)
+            stacked_bar_chart(df, species, 'Species', 'zoop_{}.png'.format(sh), spath, cols)
 
 
 if __name__ == '__main__':
-    fname = '/Users/lgarzio/Documents/rucool/Saba/Ross_Sea/Ross_Sea2018_grazing/data/zooplankton_abundance_grazing_subset_CORRECTED.xlsx'
+    fname = '/Users/lgarzio/Documents/rucool/Saba/Ross_Sea/Ross_Sea2018_grazing/data/zooplankton_abundance_grazing_forpython.xlsx'
     main(fname)
